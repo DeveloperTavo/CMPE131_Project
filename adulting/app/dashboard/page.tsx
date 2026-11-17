@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/lib/actions/auth";
@@ -21,6 +22,7 @@ export default function DashboardPage() {
 
 // The part of the page that needs to know who's logged in
 async function Welcome() {
+  await connection();
   const supabase = await createClient();
 
   const {
