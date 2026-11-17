@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Adulting brand colors */
+@theme {
+  --color-brand: #1f4d2e;
+  --color-brand-light: #6aa84f;
+  --color-cream: #f7f6ee;
+  --color-sunny: #f4c542;
+}
