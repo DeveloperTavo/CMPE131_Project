@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import TopBar from "@/components/TopBar";
 import Sidebar from "@/components/Sidebar";
 
@@ -11,6 +13,16 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <Sidebar />
         <main className="flex-1">{children}</main>
       </div>
+
+      {/* Floating "New Task" button in the bottom-right corner */}
+      <Link
+        href="/tasks/new"
+        aria-label="New task"
+        title="New task"
+        className="fixed bottom-8 right-8 flex h-16 w-16 items-center justify-center rounded-full bg-brand-light text-white shadow-lg transition hover:scale-105 hover:bg-brand"
+      >
+        <Plus className="h-9 w-9" strokeWidth={3} />
+      </Link>
     </div>
   );
 }
