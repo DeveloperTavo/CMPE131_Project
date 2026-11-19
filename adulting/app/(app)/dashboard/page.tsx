@@ -2,21 +2,14 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { logout } from "@/lib/actions/auth";
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-cream p-10 text-gray-900">
+    <div className="rounded-2xl bg-white p-8 shadow-sm">
       <Suspense fallback={<p className="text-gray-500">Loading...</p>}>
         <Welcome />
       </Suspense>
-
-      <form action={logout} className="mt-6">
-        <button className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:opacity-90">
-          Log Out
-        </button>
-      </form>
-    </main>
+    </div>
   );
 }
 
@@ -39,14 +32,12 @@ async function Welcome() {
     .eq("id", user.id)
     .single();
 
+  const firstName = (profile?.full_name ?? "").split(" ")[0] || "there";
+
   return (
     <>
-      <h1 className="text-3xl font-bold text-brand">
-        Welcome, {profile?.full_name ?? user.email}!
-      </h1>
-      <p className="mt-2 text-gray-600">
-        You&apos;re logged in. The real dashboard is coming soon.
-      </p>
+      <h1 className="text-2xl font-bold">Hello, {firstName}!</h1>
+      <p className="mt-1 text-gray-600">Your tasks for the day will show up here soon.</p>
     </>
   );
 }
