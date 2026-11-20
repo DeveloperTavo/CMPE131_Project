@@ -8,7 +8,7 @@ import { createTask } from "@/lib/actions/tasks";
 const inputStyle =
   "w-full rounded-lg border border-gray-300 px-3 py-2 font-normal text-gray-900 shadow-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-light/40";
 
-export default function NewTaskForm() {
+export default function NewTaskForm({ defaultCategory = "household" }: { defaultCategory?: string }) {  
   // Runs in the browser right before the form is sent to the server.
   // The browser knows the user's time zone, so it turns "Nov 20 at 8:45 AM"
   // into one exact moment in time that the server can't get wrong.
@@ -36,7 +36,7 @@ export default function NewTaskForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Category">
-          <select name="category" defaultValue="household" className={inputStyle}>
+          <select name="category" defaultValue={defaultCategory} className={inputStyle}>            
             <option value="household">Household</option>
             <option value="auto">Auto</option>
             <option value="health">Health</option>

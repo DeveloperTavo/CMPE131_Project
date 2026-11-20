@@ -54,3 +54,9 @@ export function greetingFor(date: Date, timeZone: string): string {
   if (hour < 17) return "Good afternoon";
   return "Good evening";
 }
+
+// The Monday after today. This is where "next week" starts.
+export function nextMondayKey(todayKey: string): string {
+  const today = weekdayIndex(todayKey); // 0 = Sunday ... 6 = Saturday
+  return addDays(todayKey, today === 0 ? 1 : 8 - today);
+}
