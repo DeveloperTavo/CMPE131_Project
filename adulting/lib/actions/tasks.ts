@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 // The only values we allow. These match the rules in our database.
@@ -55,4 +56,21 @@ export async function createTask(formData: FormData) {
 
   // 4. Back to the dashboard
   redirect("/dashboard");
+}
+
+export async function completeTask(formData: FormData) {
+  const taskId = String(formData.get("taskId") ?? "");
+  if (!taskId) return;
+
+  const supabase = await createClient();
+
+  // Calls the complete_task database function we just created
+  const { error } = await supabase.rpc("complete_task", { task_id: taskId });
+
+  if (error) {
+    console.error("Could not complete task:", error.message);
+  }
+
+  // Refresh every page so the finished task disappears everywhere
+  revalidatePath("/", "layout");
 }

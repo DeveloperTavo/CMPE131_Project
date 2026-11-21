@@ -4,6 +4,7 @@ import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import CompleteButton from "@/components/CompleteButton";
 import { CATEGORY_INFO, FREQUENCY_LABELS, type Category, type Task } from "@/lib/task-helpers";
 import { addDays, dateKey, formatKey, formatTime, nextMondayKey } from "@/lib/dates";
 
@@ -144,6 +145,7 @@ function TaskCard({
   return (
     <article className={`rounded-2xl p-4 shadow-sm ${overdue ? "bg-amber-100" : "bg-white"}`}>
       <div className="flex items-start gap-3">
+        <CompleteButton taskId={task.id} taskTitle={task.title} />
         <span
           className={`mt-1 h-5 w-1 shrink-0 rounded-full ${CATEGORY_INFO[task.category].color}`}
         />

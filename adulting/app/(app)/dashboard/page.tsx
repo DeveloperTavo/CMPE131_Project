@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import MiniCalendar from "@/components/dashboard/MiniCalendar";
+import CompleteButton from "@/components/CompleteButton";
 import { CATEGORY_INFO, type Task } from "@/lib/task-helpers";
 import {
   addDays,
@@ -147,7 +148,8 @@ async function Dashboard() {
             ) : (
               <ul className="flex flex-col gap-3">
                 {overdueTasks.map((task) => (
-                  <li key={task.id} className="flex gap-4 text-sm">
+                  <li key={task.id} className="flex items-center gap-3 text-sm">
+                    <CompleteButton taskId={task.id} taskTitle={task.title} />
                     <span className="font-semibold text-gray-600">
                       {formatKey(task.dayKey, { month: "numeric", day: "2-digit" })}
                     </span>
@@ -163,10 +165,11 @@ async function Dashboard() {
   );
 }
 
-// One task: colored category bar, title, and time
+// One task: check button, colored category bar, title, and time
 function TaskLine({ task, time }: { task: Task; time: string }) {
   return (
     <li className="flex items-center gap-3">
+      <CompleteButton taskId={task.id} taskTitle={task.title} />
       <span className={`h-6 w-1 shrink-0 rounded-full ${CATEGORY_INFO[task.category].color}`} />
       <span className="font-semibold">{task.title}</span>
       <span className="text-sm text-gray-500">{time}</span>
