@@ -58,19 +58,22 @@ export async function createTask(formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function completeTask(formData: FormData) {
-  const taskId = String(formData.get("taskId") ?? "");
-  if (!taskId) return;
+// Marks a task done (and schedules the next one if it repeats).
+// Returns an error message, or null if it worked.
+export async function completeTask(taskId: string): Promise<{ error: string | null }> {
+  if (!taskId) return { error: "Missing task." };
 
   const supabase = await createClient();
 
-  // Calls the complete_task database function we just created
+  // Calls the complete_task database function
   const { error } = await supabase.rpc("complete_task", { task_id: taskId });
 
   if (error) {
     console.error("Could not complete task:", error.message);
+    return { error: "Couldn't complete this task. Please try again." };
   }
 
   // Refresh every page so the finished task disappears everywhere
   revalidatePath("/", "layout");
+  return { error: null };
 }

@@ -149,7 +149,7 @@ async function Dashboard() {
               <ul className="flex flex-col gap-3">
                 {overdueTasks.map((task) => (
                   <li key={task.id} className="flex items-center gap-3 text-sm">
-                    <CompleteButton taskId={task.id} taskTitle={task.title} />
+                    <CompleteButton taskId={task.id} taskTitle={task.title} category={task.category} />
                     <span className="font-semibold text-gray-600">
                       {formatKey(task.dayKey, { month: "numeric", day: "2-digit" })}
                     </span>
@@ -169,7 +169,7 @@ async function Dashboard() {
 function TaskLine({ task, time }: { task: Task; time: string }) {
   return (
     <li className="flex items-center gap-3">
-      <CompleteButton taskId={task.id} taskTitle={task.title} />
+      <CompleteButton taskId={task.id} taskTitle={task.title} category={task.category} />
       <span className={`h-6 w-1 shrink-0 rounded-full ${CATEGORY_INFO[task.category].color}`} />
       <span className="font-semibold">{task.title}</span>
       <span className="text-sm text-gray-500">{time}</span>

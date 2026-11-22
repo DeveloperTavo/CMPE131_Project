@@ -3,10 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
-const ALLOWED_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp", "image/heic"];
+import { ACCEPT_ATTRIBUTE, uploadDocuments } from "@/lib/upload";
 
 const inputStyle =
   "w-full rounded-lg border border-gray-300 px-3 py-2 font-normal text-gray-900 shadow-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-light/40";
@@ -16,12 +13,6 @@ export default function UploadForm() {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Stop, and show an error message
-  function fail(message: string) {
-    setIsUploading(false);
-    setError(message);
-  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); // don't reload the page
@@ -36,58 +27,26 @@ export default function UploadForm() {
       .getAll("files")
       .filter((item): item is File => item instanceof File && item.size > 0);
 
-    // 1. Check everything before uploading
-    if (!title) return fail("Please give these files a name.");
-    if (files.length === 0) return fail("Please choose at least one file.");
-    for (const file of files) {
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        return fail(`"${file.name}" isn't a PDF or an image.`);
-      }
-      if (file.size > MAX_BYTES) {
-        return fail(`"${file.name}" is bigger than 10 MB.`);
-      }
+    if (!title) {
+      setError("Please give these files a name.");
+      return;
+    }
+    if (files.length === 0) {
+      setError("Please choose at least one file.");
+      return;
     }
 
     setIsUploading(true);
-    const supabase = createClient();
+    const problem = await uploadDocuments({ files, title, category });
+    setIsUploading(false);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return fail("Please log in again.");
-
-    // 2. Upload each file, then save its information
-    for (const file of files) {
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = `${user.id}/${crypto.randomUUID()}-${safeName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(path, file, { contentType: file.type });
-
-      if (uploadError) {
-        return fail(`Couldn't upload "${file.name}": ${uploadError.message}`);
-      }
-
-      const { error: saveError } = await supabase.from("documents").insert({
-        title,
-        category,
-        file_name: file.name,
-        storage_path: path,
-        mime_type: file.type,
-        size_bytes: file.size,
-      });
-
-      if (saveError) {
-        // Clean up the uploaded file so nothing is left behind
-        await supabase.storage.from("documents").remove([path]);
-        return fail(`Couldn't save "${file.name}". Please try again.`);
-      }
+    if (problem) {
+      setError(problem);
+      return;
     }
 
-    // 3. Done! Clear the form and refresh the file list.
+    // Done! Clear the form and refresh the file list.
     form.reset();
-    setIsUploading(false);
     setSuccess(`Uploaded ${files.length} file${files.length === 1 ? "" : "s"}!`);
     router.refresh();
   }
@@ -125,7 +84,7 @@ export default function UploadForm() {
           type="file"
           name="files"
           multiple
-          accept=".pdf,image/jpeg,image/png,image/webp,image/heic"
+          accept={ACCEPT_ATTRIBUTE}
           className="text-sm font-normal file:mr-4 file:rounded-lg file:border-0 file:bg-brand-light/30 file:px-4 file:py-2 file:font-semibold file:text-brand hover:file:bg-brand-light/50"
         />
       </label>

@@ -145,7 +145,7 @@ function TaskCard({
   return (
     <article className={`rounded-2xl p-4 shadow-sm ${overdue ? "bg-amber-100" : "bg-white"}`}>
       <div className="flex items-start gap-3">
-        <CompleteButton taskId={task.id} taskTitle={task.title} />
+        <CompleteButton taskId={task.id} taskTitle={task.title} category={task.category} />
         <span
           className={`mt-1 h-5 w-1 shrink-0 rounded-full ${CATEGORY_INFO[task.category].color}`}
         />
