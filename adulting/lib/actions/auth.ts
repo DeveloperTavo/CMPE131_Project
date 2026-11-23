@@ -50,7 +50,7 @@ export async function signup(formData: FormData) {
     goBackWithError("/signup", error.message);
   }
 
-  redirect("/dashboard");
+  redirect("/about-you?welcome=1");
 }
 
 export async function logout() {

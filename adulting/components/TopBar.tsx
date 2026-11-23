@@ -75,12 +75,13 @@ async function UserMenu() {
 
   return (
     <div className="flex items-center gap-3">
-      <div
-        title={name}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-light/50 font-bold text-brand"
+      <Link
+        href="/about-you"
+        title={`${name} – About You`}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-light/50 font-bold text-brand hover:ring-2 hover:ring-brand-light"
       >
         {initial}
-      </div>
+      </Link>
       <form action={logout}>
         <button aria-label="Log out" title="Log out" className="text-gray-600 hover:text-brand">
           <LogOut className="h-5 w-5" />
