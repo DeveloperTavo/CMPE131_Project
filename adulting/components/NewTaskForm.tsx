@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import { createTask } from "@/lib/actions/tasks";
+import { FREQUENCY_LABELS } from "@/lib/task-helpers";
 
 const inputStyle =
   "w-full rounded-lg border border-gray-300 px-3 py-2 font-normal text-gray-900 shadow-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-light/40";
@@ -46,11 +47,11 @@ export default function NewTaskForm({ defaultCategory = "household" }: { default
 
         <Field label="Repeats">
           <select name="frequency" defaultValue="once" className={inputStyle}>
-            <option value="once">Does not repeat</option>
-            <option value="daily">Every day</option>
-            <option value="weekly">Every week</option>
-            <option value="monthly">Every month</option>
-            <option value="yearly">Every year</option>
+            {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </Field>
 

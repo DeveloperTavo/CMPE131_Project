@@ -39,11 +39,14 @@ export const CATEGORY_INFO: Record<
   },
 };
 
-// Friendly names for how often a task repeats
+// Friendly names for how often a task repeats.
+// This is the ONE list of repeat options. The form and the server both read from it.
 export const FREQUENCY_LABELS: Record<string, string> = {
   once: "Does not repeat",
   daily: "Every day",
   weekly: "Every week",
   monthly: "Every month",
+  quarterly: "Every 3 months",
+  semiannually: "Every 6 months",
   yearly: "Every year",
 };

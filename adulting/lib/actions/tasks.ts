@@ -3,10 +3,11 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { FREQUENCY_LABELS } from "@/lib/task-helpers";
 
 // The only values we allow. These match the rules in our database.
 const CATEGORIES = ["household", "auto", "health", "finances"];
-const FREQUENCIES = ["once", "daily", "weekly", "monthly", "yearly"];
+const FREQUENCIES = Object.keys(FREQUENCY_LABELS); // every allowed repeat option
 const REMIND_OPTIONS = [0, 60, 1440, 10080, 43200]; // minutes: due time, 1 hour, 1 day, 1 week, ~1 month
 
 function goBackWithError(message: string): never {
