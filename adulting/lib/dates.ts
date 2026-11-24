@@ -60,3 +60,32 @@ export function nextMondayKey(todayKey: string): string {
   const today = weekdayIndex(todayKey); // 0 = Sunday ... 6 = Saturday
   return addDays(todayKey, today === 0 ? 1 : 8 - today);
 }
+
+// Turns "2026-12-01" at "09:00" in a time zone (like America/Los_Angeles)
+// into the exact moment in time, so the server can save it correctly.
+export function zonedTimeToUtc(dayKey: string, time: string, timeZone: string): Date {
+  const [year, month, day] = dayKey.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+
+  // First guess: pretend the time is in UTC
+  const guess = Date.UTC(year, month - 1, day, hour, minute);
+
+  // How far is that time zone from UTC at that moment? (handles daylight saving)
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).formatToParts(new Date(guess));
+
+  const get = (type: string) => Number(parts.find((part) => part.type === type)?.value);
+  const shownAsUtc = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"), get("second"));
+  const offset = shownAsUtc - guess;
+
+  // Shift the guess by that difference
+  return new Date(guess - offset);
+}

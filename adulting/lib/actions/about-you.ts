@@ -64,5 +64,5 @@ export async function saveAboutYou(formData: FormData) {
   revalidatePath("/", "layout");
 
   // New users continue to the dashboard. Everyone else stays here and sees "Saved!"
-  redirect(isWelcome ? "/dashboard" : "/about-you?saved=1");
+  redirect(isWelcome ? "/suggestions" : "/about-you?saved=1");
 }

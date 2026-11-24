@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import MiniCalendar from "@/components/dashboard/MiniCalendar";
 import CompleteButton from "@/components/CompleteButton";
+import SuggestionList from "@/components/suggestions/SuggestionList";
 import { CATEGORY_INFO, type Task } from "@/lib/task-helpers";
 import {
   addDays,
@@ -159,6 +160,12 @@ async function Dashboard() {
               </ul>
             )}
           </div>
+        </section>
+        <section>
+          <h2 className="mb-3 text-xl font-bold">Suggested for You</h2>
+          <Suspense fallback={<p className="text-sm text-gray-500">Loading suggestions...</p>}>
+            <SuggestionList limit={3} />
+          </Suspense>
         </section>
       </div>
     </div>

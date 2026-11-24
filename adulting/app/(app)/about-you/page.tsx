@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
@@ -50,7 +51,10 @@ async function AboutYouContent({ searchParams }: { searchParams: Params }) {
 
       {saved && (
         <p className="mt-4 rounded-lg bg-green-50 p-3 text-sm text-green-700">
-          Saved! Your answers are up to date.
+          Saved! Your answers are up to date.{" "}
+          <Link href="/suggestions" className="font-semibold underline">
+            See your suggested reminders →
+          </Link>
         </p>
       )}
       {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
